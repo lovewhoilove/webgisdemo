@@ -18,6 +18,7 @@ export default {
     components: {},
     mounted: function () {
         this._createMapView();
+        console.log(this.$store.state._defaultThemeColor);
     },
     methods: {
         //创建地图
