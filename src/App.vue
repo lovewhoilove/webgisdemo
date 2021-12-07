@@ -1,11 +1,30 @@
 <template>
     <div id="app">
         <el-container class="app-out-container">
-            <el-header class="sys-header">xxxx项目</el-header>
+            <el-header class="sys-header">一张图项目系统</el-header>
             <el-container class="app-content-container">
-                <el-aside class="sys-menu">左侧菜单</el-aside>
+                <el-aside class="sys-menu">
+                    <el-menu
+                        default-active="1-4-1"
+                        class="el-menu-vertical-demo"
+                        background-color="#545c64"
+                        text-color="#ffffff"
+                        active-text-color="#ffd04b"
+                        @select="handleMenuSelect"
+                        :collapse="isCollapse"
+                    >
+                        <el-menu-item index="1">
+                            <i class="el-icon-monitor"></i>
+                            <span slot="title">首页大屏</span>
+                        </el-menu-item>
+                        <el-menu-item index="2">
+                            <i class="el-icon-picture-outline"></i>
+                            <span slot="title">一张图</span>
+                        </el-menu-item>
+                    </el-menu>
+                </el-aside>
                 <el-main class="sys-map">
-                    <Mapview />
+                    <router-view></router-view>
                 </el-main>
             </el-container>
         </el-container>
@@ -13,12 +32,22 @@
 </template>
 
 <script>
-import Mapview from './components/Mapview';
-
 export default {
     name: 'App',
-    components: {
-        Mapview,
+    components: {},
+    data() {
+        return {
+            isCollapse: true,
+        };
+    },
+    methods: {
+        handleMenuSelect(index) {
+            if (index === '1') {
+                this.$router.push('/');
+            } else if (index === '2') {
+                this.$router.push('/onemap');
+            }
+        },
     },
 };
 </script>
@@ -37,16 +66,18 @@ body,
     height: 100%;
 }
 .sys-header {
-    background-color: #409eff;
+    background-color: #32373e;
     line-height: 60px;
     color: #ffffff;
+    font-weight: 600;
     font-size: 20px;
 }
 .sys-menu {
-    width: 200px;
-    background-color: #c0c4cc;
+    background-color: #545c64;
+    width: 64px !important;
+    overflow: hidden;
 }
 .sys-map {
-    padding: 2px;
+    padding: 1px;
 }
 </style>
