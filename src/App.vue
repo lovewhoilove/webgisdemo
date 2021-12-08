@@ -5,7 +5,7 @@
             <el-container class="app-content-container">
                 <el-aside class="sys-menu">
                     <el-menu
-                        default-active="1-4-1"
+                        default-active="1"
                         class="el-menu-vertical-demo"
                         background-color="#545c64"
                         text-color="#ffffff"
