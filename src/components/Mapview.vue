@@ -97,6 +97,8 @@ export default {
             });
 
             mapView.ui.add(zoom);
+
+            this.$store.commit('_setDefaultMapView', mapView);
         },
     },
 };

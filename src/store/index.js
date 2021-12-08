@@ -5,19 +5,25 @@ Vue.use(Vuex);
 
 
 const state = {
-    _defaultView: null,
-    _defaultThemeColor: '#409EFF',
+    _defaultMapView: '', //默认地图视图
+    _defaultMaptreeVisible: false, //地图目录树的可见性
 };
 
 const getters = {
-    _getDefaultView() {
-        return state._defaultView;
+    _getDefaultMapView() {
+        return state._defaultMapView;
+    },
+    _getDefaultMaptreeVisible() {
+        return state._defaultMaptreeVisible;
     }
 };
 
 const mutations = {
-    _setDefaultView(state, value) {
-        state._defaultView = value;
+    _setDefaultMapView(state, value) {
+        state._defaultMapView = value;
+    },
+    _setDefaultMaptreeVisible(state, value) {
+        state._defaultMaptreeVisible = value;
     }
 };
 

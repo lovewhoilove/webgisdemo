@@ -1,10 +1,10 @@
 <template>
     <div class="maptools-view">
-        <span class="maptools-item" @click="handleMaptoolsItemClick">行政区导航</span>
-        <span class="maptools-item" @click="handleMaptoolsItemClick">目录树管理</span>
-        <span class="maptools-item" @click="handleMaptoolsItemClick">距离测量</span>
-        <span class="maptools-item" @click="handleMaptoolsItemClick">面积测量</span>
-        <span class="maptools-item" @click="handleMaptoolsItemClick">清屏</span>
+        <span class="maptools-item" @click="handleMaptoolsItemClick" id="xzqh">行政区导航</span>
+        <span class="maptools-item" @click="handleMaptoolsItemClick" id="maptree">目录树管理</span>
+        <span class="maptools-item" @click="handleMaptoolsItemClick" id="distance">距离测量</span>
+        <span class="maptools-item" @click="handleMaptoolsItemClick" id="area">面积测量</span>
+        <span class="maptools-item" @click="handleMaptoolsItemClick" id="clear">清屏</span>
     </div>
 </template>
 
@@ -13,8 +13,28 @@ export default {
     name: 'Maptools',
     methods: {
         handleMaptoolsItemClick(e) {
-            console.log(e.target.innerText);
+            // console.log(e.target.id);
+            switch (e.target.id) {
+                case 'xzqh':
+                    break;
+                case 'maptree':
+                    if (this.$store.getters._getDefaultMaptreeVisible) {
+                        this.$store.commit('_setDefaultMaptreeVisible', false);
+                    } else {
+                        this.$store.commit('_setDefaultMaptreeVisible', true);
+                    }
+                    break;
+                case 'distance':
+                    break;
+                case 'area':
+                    break;
+                case 'clear':
+                    break;
+                default:
+                    break;
+            }
         },
+        openXZQHPannel: function () {},
     },
 };
 </script>
