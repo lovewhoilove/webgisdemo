@@ -9,12 +9,7 @@
 
 <script>
 import { loadModules } from 'esri-loader';
-
-const options = {
-    //定义一个包含有JS API中js开发包和css样式文件的对象
-    url: 'http://localhost/4.21/init.js',
-    css: 'http://localhost/4.21/esri/themes/light/main.css',
-};
+import config from './config';
 
 export default {
     name: 'Mapview',
@@ -35,7 +30,7 @@ export default {
                     'esri/widgets/ScaleBar',
                     'esri/widgets/Zoom',
                 ],
-                options,
+                config.options,
             );
 
             const basemap = new Basemap({
