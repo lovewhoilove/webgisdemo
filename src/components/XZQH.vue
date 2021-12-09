@@ -46,6 +46,8 @@
 import { loadModules } from 'esri-loader';
 import config from './config';
 
+let graphic = '';
+
 export default {
     name: 'XZQH',
     data() {
@@ -150,6 +152,65 @@ export default {
             }
         },
         //定位跳转并高亮
+        async handleItemClick(val, type) {
+            let serverUrl = '';
+            let code = '';
+            const view = this.$store.getters._getDefaultMapView;
+            switch (type) {
+                case 'city':
+                    code = val.toString().substring(0, 4);
+                    serverUrl =
+                        'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/city_mercator/FeatureServer/0';
+                    break;
+                case 'county':
+                    code = val.toString().substring(0, 6);
+                    serverUrl =
+                        'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/county_mercator/FeatureServer/0';
+                    break;
+                default:
+                    break;
+            }
+            const [QueryTask, Query, Graphic] = await loadModules(
+                ['esri/tasks/QueryTask', 'esri/tasks/support/Query', 'esri/Graphic'],
+                config.options,
+            );
+            const queryTask = new QueryTask({
+                url: serverUrl,
+            });
+            let query = new Query();
+            query.returnGeometry = true;
+            query.outFields = ['*'];
+            query.where = "Code like '" + code + "%'";
+
+            let results = await queryTask.execute(query);
+
+            //渲染和定位
+            const featuresResult = results.features[0];
+            if (graphic) {
+                view.graphics.remove(graphic);
+            }
+            const fillSymbol = {
+                type: 'simple-fill',
+                color: [188, 240, 234, 0.1],
+                outline: {
+                    color: '#00FFFF',
+                    width: 2,
+                },
+            };
+            graphic = new Graphic({
+                geometry: featuresResult.geometry,
+                symbol: fillSymbol,
+            });
+            view.graphics.add(graphic);
+
+            view.goTo({
+                center: [
+                    featuresResult.geometry.extent.center.longitude,
+                    featuresResult.geometry.extent.center.latitude,
+                ],
+                zoom: 8,
+            });
+        },
         //关闭行政区划导航面板
         closeXZQHPannel() {
             const currentVisible = this.$store.getters._getDefaultXZQHVisible;
