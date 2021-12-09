@@ -3,6 +3,7 @@
         <Mapview />
         <Maptools />
         <Maptree />
+        <XZQH />
     </div>
 </template>
 
@@ -10,6 +11,7 @@
 import Mapview from './../components/Mapview';
 import Maptools from './../components/Maptools';
 import Maptree from './../components/Maptree';
+import XZQH from './../components/XZQH';
 
 export default {
     name: 'OneMap',
@@ -17,6 +19,7 @@ export default {
         Mapview,
         Maptools,
         Maptree,
+        XZQH,
     },
     methods: {},
 };
