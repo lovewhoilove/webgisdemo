@@ -119,6 +119,7 @@ export default {
     width: 200px;
     height: 300px;
     background-color: #ffffff;
+    border-radius: 6px;
 }
 .maptree-header {
     width: 100%;

@@ -127,6 +127,7 @@ export default {
                 });
 
                 //Promise.all()方法用于将多个 Promise 实例，包装成一个新的 Promise 实例
+                //循环遍历，获取每一市级对应的区县数据
                 Promise.all(
                     currentCityData.map(async (item2) => {
                         const cityCode = item2.value.toString().substring(0, 4);
@@ -163,7 +164,7 @@ export default {
                         'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/city_mercator/FeatureServer/0';
                     break;
                 case 'county':
-                    code = val.toString().substring(0, 6);
+                    code = val.toString();
                     serverUrl =
                         'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/county_mercator/FeatureServer/0';
                     break;
@@ -203,13 +204,21 @@ export default {
             });
             view.graphics.add(graphic);
 
-            view.goTo({
-                center: [
-                    featuresResult.geometry.extent.center.longitude,
-                    featuresResult.geometry.extent.center.latitude,
-                ],
-                zoom: 8,
-            });
+            //地图跳转
+            let opts = {
+                duration: 3000, // 动画持续事件
+            };
+
+            view.goTo(
+                {
+                    center: [
+                        featuresResult.geometry.extent.center.longitude,
+                        featuresResult.geometry.extent.center.latitude,
+                    ],
+                    zoom: 8,
+                },
+                opts,
+            );
         },
         //关闭行政区划导航面板
         closeXZQHPannel() {
@@ -225,9 +234,10 @@ export default {
     position: absolute;
     top: 20px;
     left: 15px;
-    width: 500px;
+    width: 480px;
     height: 600px;
     background-color: #fff;
+    border-radius: 6px;
 }
 .xzqh-header {
     width: 100%;
@@ -257,7 +267,7 @@ export default {
 .xzqh-select-label {
     font-size: 13px;
 }
-.XZQH-content-pannel {
+.xzqh-content-pannel {
     width: 100%;
     height: 525px;
     overflow: auto;
@@ -279,10 +289,8 @@ export default {
 .county-item:hover {
     color: #409eff;
 }
-.XZQHComponent-pannel tr {
+.xzqh-pannel tr {
     display: block; /*将tr设置为块体元素*/
     margin-bottom: 15px; /*设置tr间距为15px*/
 }
 </style>
-
-
