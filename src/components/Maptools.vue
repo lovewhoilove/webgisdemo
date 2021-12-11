@@ -15,10 +15,10 @@
             <span class="el-dropdown-link">更多功能<i class="el-icon-arrow-down el-icon--right"></i> </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item icon="el-icon-search" command="spacequery">空间查询</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-film">多屏对比</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-reading">卷帘分析</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-picture-outline">地图打印</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-view">开启图层弹窗</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-film" command="morescreen">多屏对比</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-reading" command="swipanalyst">卷帘分析</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-picture-outline" command="printmap">地图打印</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-view" command="openPopup">开启图层弹窗</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
         <span class="maptools-item" @click="handleMaptoolsItemClick" id="clear">清屏</span>
@@ -51,6 +51,15 @@ export default {
             switch (command) {
                 case 'spacequery':
                     this.initSpaceQuery();
+                    break;
+                case 'morescreen':
+                    this.$router.push('/onemap/one');
+                    break;
+                case 'swipanalyst':
+                    break;
+                case 'printmap':
+                    break;
+                case 'openPopup':
                     break;
                 default:
                     break;

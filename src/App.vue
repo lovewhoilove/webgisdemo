@@ -11,7 +11,7 @@
                         text-color="#ffffff"
                         active-text-color="#ffd04b"
                         @select="handleMenuSelect"
-                        :collapse="isCollapse"
+                        :collapse="true"
                     >
                         <el-menu-item index="1">
                             <i class="el-icon-monitor"></i>
@@ -35,11 +35,6 @@
 export default {
     name: 'App',
     components: {},
-    data() {
-        return {
-            isCollapse: true,
-        };
-    },
     methods: {
         handleMenuSelect(index) {
             if (index === '1') {
