@@ -2,13 +2,15 @@
     <div class="maptools-view">
         <span class="maptools-item" @click="handleMaptoolsItemClick" id="xzqh">行政区导航</span>
         <span class="maptools-item" @click="handleMaptoolsItemClick" id="maptree">目录树管理</span>
-        <el-dropdown trigger="click" class="maptools-item">
+        <el-dropdown trigger="click" class="maptools-item" @command="handleCommand">
             <span class="el-dropdown-link">地图测量<i class="el-icon-arrow-down el-icon--right"></i> </span>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item icon="el-icon-plus">距离测量</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-circle-plus">面积测量</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-edit">自定义测量(长度)</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-edit">自定义测量(面积)</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-plus" command="distance">距离测量</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-circle-plus" command="area">面积测量</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-edit" command="diymeasurement_distance"
+                    >自定义测量(长度)</el-dropdown-item
+                >
+                <el-dropdown-item icon="el-icon-edit" command="diymeasurement_area">自定义测量(面积)</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
         <el-dropdown trigger="click" class="maptools-item" @command="handleCommand">
@@ -49,6 +51,12 @@ export default {
         },
         handleCommand(command) {
             switch (command) {
+                case 'distance':
+                    this.initDistanceMap();
+                    break;
+                case 'area':
+                    this.initAreaMap();
+                    break;
                 case 'spacequery':
                     this.initSpaceQuery();
                     break;
@@ -338,6 +346,30 @@ export default {
         openMaptreePannel() {
             let currentVisible = this.$store.getters._getDefaultMaptreeVisible;
             this.$store.commit('_setDefaultMaptreeVisible', !currentVisible);
+        },
+        //地图距离量算
+        async initDistanceMap() {
+            console.log('距离测量');
+            const _self = this;
+            const view = _self.$store.getters._getDefaultMapView;
+            const [DistanceMeasurement2D] = await loadModules(['esri/widgets/DistanceMeasurement2D'], config.options);
+            if (this.measurementWidget) this.measurementWidget.destroy();
+            this.measurementWidget = new DistanceMeasurement2D({
+                view: view,
+            });
+            view.ui.add(this.measurementWidget, 'top-left');
+        },
+        //地图面积量算
+        async initAreaMap() {
+            console.log('面积测量');
+            const _self = this;
+            const view = _self.$store.getters._getDefaultMapView;
+            const [AreaMeasurement2D] = await loadModules(['esri/widgets/AreaMeasurement2D'], config.options);
+            if (this.measurementWidget) this.measurementWidget.destroy();
+            this.measurementWidget = new AreaMeasurement2D({
+                view: view,
+            });
+            view.ui.add(this.measurementWidget, 'top-left');
         },
     },
 };
