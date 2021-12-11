@@ -76,6 +76,7 @@ export default {
                     this._handlePrintMap();
                     break;
                 case 'openPopup':
+                    this.openMapPopup();
                     break;
                 default:
                     break;
@@ -459,6 +460,7 @@ export default {
                 return;
             }
         },
+        //地图打印
         async _handlePrintMap() {
             const _self = this;
             const view = _self.$store.getters._getDefaultMapView;
@@ -501,6 +503,30 @@ export default {
         openMaptreePannel() {
             let currentVisible = this.$store.getters._getDefaultMaptreeVisible;
             this.$store.commit('_setDefaultMaptreeVisible', !currentVisible);
+        },
+        //开启图层弹窗
+        openMapPopup() {
+            const _self = this;
+            const view = _self.$store.getters._getDefaultMapView;
+            const resultLayer = view.map.findLayerById('layerid');
+            if (resultLayer) {
+                // Get the screen point from the view's click event
+                view.on('click', function (event) {
+                    view.hitTest(event).then(function (response) {
+                        if (response.results.length) {
+                            let graphic = response.results.filter(function (result) {
+                                return result.graphic.layer.id === 'layerid';
+                            })[0].graphic;
+                            console.log(graphic.attributes);
+                        }
+                    });
+                });
+            } else {
+                _self.$message({
+                    message: '请添加业务图层',
+                    type: 'warning',
+                });
+            }
         },
     },
 };
