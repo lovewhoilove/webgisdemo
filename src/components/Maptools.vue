@@ -56,8 +56,10 @@ export default {
                     this.$router.push('/onemap/one');
                     break;
                 case 'swipanalyst':
+                    this._initSwipe();
                     break;
                 case 'printmap':
+                    this._handlePrintMap();
                     break;
                 case 'openPopup':
                     break;
@@ -270,6 +272,64 @@ export default {
                 });
             }
             return _self.geoData;
+        },
+        //卷帘分析
+        async _initSwipe() {
+            const _self = this;
+            const view = _self.$store.getters._getDefaultMapView;
+            const [Swipe] = await loadModules(['esri/widgets/Swipe'], config.options);
+            const topLayer = view.map.findLayerById('swipeLayerTop');
+            const bottomLayer = view.map.findLayerById('swipeLayerBottom');
+            if (topLayer && bottomLayer) {
+                _self.swipe = new Swipe({
+                    leadingLayers: [topLayer],
+                    trailingLayers: [bottomLayer],
+                    position: 50,
+                    view: view,
+                });
+                view.ui.add(_self.swipe);
+            } else {
+                _self.$message({
+                    message: '请添加至少两张业务图层',
+                    type: 'warning',
+                });
+                return;
+            }
+        },
+        async _handlePrintMap() {
+            const _self = this;
+            const view = _self.$store.getters._getDefaultMapView;
+            const [PrintTask, PrintTemplate, PrintParameters] = await loadModules(
+                ['esri/tasks/PrintTask', 'esri/tasks/support/PrintTemplate', 'esri/tasks/support/PrintParameters'],
+                config.options,
+            );
+
+            let printTask = new PrintTask({
+                url: 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task',
+            });
+
+            let template = new PrintTemplate({
+                format: 'pdf',
+                exportOptions: {
+                    dpi: 96,
+                },
+                layout: 'a4-portrait',
+                layoutOptions: {
+                    titleText: 'xxx一张图',
+                    authorText: 'lovewhoilove',
+                },
+            });
+
+            let params = new PrintParameters({
+                view: view,
+                template: template,
+            });
+
+            printTask.execute(params).then((printResult, printError) => {
+                console.log(printResult, printError);
+                if (printResult.url) window.open(printResult.url);
+                if (printError) this.$message.error('地图打印失败');
+            });
         },
         openXZQHPannel() {
             let currentVisible = this.$store.getters._getDefaultXZQHVisible;
