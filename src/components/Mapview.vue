@@ -4,6 +4,9 @@
         <div id="basemap-toggle"></div>
         <div id="scalebar"></div>
         <div id="zoom"></div>
+        <div class="view-change" @click="handleViewChange">
+            <span>{{ viewModelText }}</span>
+        </div>
     </div>
 </template>
 
@@ -14,12 +17,21 @@ import config from './config';
 export default {
     name: 'Mapview',
     components: {},
+    data() {
+        return {
+            viewModelText: '3D',
+        };
+    },
     mounted: function () {
         this._createMapView();
     },
     methods: {
         //创建地图
         async _createMapView() {
+            document.getElementById('basemap-toggle').innerHTML = '';
+            document.getElementById('scalebar').innerHTML = '';
+            document.getElementById('zoom').innerHTML = '';
+
             const [Map, MapView, Basemap, TileLayer, BasemapToggle, ScaleBar, Zoom] = await loadModules(
                 [
                     'esri/Map',
@@ -95,6 +107,54 @@ export default {
 
             this.$store.commit('_setDefaultMapView', mapView);
         },
+        async _createSceneView() {
+            document.getElementById('basemap-toggle').innerHTML = '';
+            document.getElementById('scalebar').innerHTML = '';
+            document.getElementById('zoom').innerHTML = '';
+
+            const [Map, SceneView, Basemap, TileLayer] = await loadModules(
+                ['esri/Map', 'esri/views/SceneView', 'esri/Basemap', 'esri/layers/TileLayer'],
+                config.options,
+            );
+
+            let basemap = new Basemap({
+                baseLayers: [
+                    new TileLayer({
+                        url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer',
+                        title: 'Basemap',
+                    }),
+                ],
+                title: 'basemap',
+                id: 'basemap',
+            });
+            const map = new Map({
+                basemap,
+            });
+            const sceneView = new SceneView({
+                container: 'mapview',
+                map: map,
+            });
+
+            setTimeout(() => {
+                sceneView.goTo({
+                    zoom: 10,
+                    center: [104.072745, 30.663774],
+                });
+            }, 3000);
+
+            sceneView.ui.components = [];
+            this.$store.commit('_setDefaultMapView', sceneView);
+        },
+        //二三维切换
+        handleViewChange() {
+            if (this.viewModelText === '3D') {
+                this._createSceneView();
+                this.viewModelText = '2D';
+            } else {
+                this._createMapView();
+                this.viewModelText = '3D';
+            }
+        },
     },
 };
 </script>
@@ -120,5 +180,18 @@ export default {
     position: absolute;
     bottom: 100px;
     right: 15px;
+}
+.view-change {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    right: 15px;
+    bottom: 180px;
+    background-color: #fff;
+    cursor: pointer;
+    text-align: center;
+}
+.view-change span {
+    line-height: 32px;
 }
 </style>
