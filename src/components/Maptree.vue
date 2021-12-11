@@ -64,6 +64,24 @@ export default {
                             layerurl:
                                 'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/trainstation/FeatureServer',
                         },
+                        {
+                            label: '火车站数据84',
+                            layerid: 'layerid',
+                            layerurl:
+                                'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/trainstation84/FeatureServer',
+                        },
+                        {
+                            label: '卷帘分析top',
+                            layerid: 'swipeLayerTop',
+                            layerurl:
+                                'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/city_mercator/FeatureServer',
+                        },
+                        {
+                            label: '卷帘分析bottom',
+                            layerid: 'swipeLayerBottom',
+                            layerurl:
+                                'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/province_mercator/FeatureServer',
+                        },
                     ],
                 },
             ],
