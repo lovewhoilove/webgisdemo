@@ -6,6 +6,8 @@ const router = express.Router();
 const pgConfig = 'postgres://postgres:webgis@localhost:5432/webgis';
 
 router.get('/get', function (req, res) {
+    console.log(req.query.name);
+    const name = req.query.name;
     const client = new pg.Client(pgConfig);
     client.connect(function (isErr) {
         if (isErr) {
@@ -13,7 +15,7 @@ router.get('/get', function (req, res) {
             client.end();
             return;
         }
-        client.query('SELECT * FROM "user" WHERE username = $1', ['张三'], function (isErr, results) {
+        client.query('SELECT * FROM "user" WHERE username = $1', [name], function (isErr, results) {
             if (isErr) {
                 console.log('查询错误: ' + isErr.message);
                 res.send({
@@ -21,7 +23,7 @@ router.get('/get', function (req, res) {
                     message: '查询错误',
                 });
             } else {
-                console.log('查询成功');
+                console.log('查询成功' + results.rows);
                 console.table(results.rows);
                 res.send({
                     status: 'success',

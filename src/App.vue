@@ -1,7 +1,14 @@
 <template>
     <div id="app">
         <el-container class="app-out-container">
-            <el-header class="sys-header">一张图项目系统</el-header>
+            <el-header class="sys-header">
+                <a href="/">一张图项目系统</a>
+                <div class="user-info">
+                    <i class="el-icon-user"></i>
+                    <span>当前用户: </span>
+                    <span @click="handleUserLogin">{{ username }}</span>
+                </div>
+            </el-header>
             <el-container class="app-content-container">
                 <el-aside class="sys-menu">
                     <el-menu
@@ -28,13 +35,37 @@
                 </el-main>
             </el-container>
         </el-container>
+
+        <el-dialog title="用户登录/注册" :visible.sync="loginDialogVisible" width="30%">
+            <div class="login-content">
+                <p>用户名：</p>
+                <el-input placeholder="请输入用户名" v-model="usernameLogin" clearable> </el-input>
+                <p>密码：</p>
+                <el-input placeholder="请输入密码" v-model="passwordLogin" clearable show-password></el-input>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="loginDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="userLogin">登录</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
+// import qs from 'qs';
+
 export default {
     name: 'App',
     components: {},
+    data() {
+        return {
+            username: '未登录',
+            loginDialogVisible: false,
+            usernameLogin: '',
+            passwordLogin: '',
+        };
+    },
     methods: {
         handleMenuSelect(index) {
             if (index === '1') {
@@ -42,6 +73,48 @@ export default {
             } else if (index === '2') {
                 this.$router.push('/onemap');
             }
+        },
+        //弹出登录界面
+        handleUserLogin() {
+            this.loginDialogVisible = true;
+        },
+        //用户登录
+        userLogin() {
+            const _self = this;
+            const name = _self.usernameLogin;
+            const pwd = _self.passwordLogin;
+
+            axios
+                .get('http://localhost:3000/user/get', {
+                    params: {
+                        name,
+                    },
+                })
+                .then(function (response) {
+                    if (response.data.status === 'success') {
+                        _self.$message({
+                            message: '恭喜你，登陆成功',
+                            type: 'success',
+                        });
+                        _self.username = response.data.data[0].username;
+                        _self.loginDialogVisible = false;
+                        const password = response.data.data[0].password;
+                        if (password === pwd) {
+                            _self.$message({
+                                message: '恭喜你，登陆成功',
+                                type: 'success',
+                            });
+                            _self.username = response.data.data[0].username;
+                            _self.loginDialogVisible = false;
+                        } else {
+                            _self.$message.error('登录失败，用户名或密码错误');
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    _self.loginDialogVisible = false;
+                    console.log(error);
+                });
         },
     },
 };
@@ -66,6 +139,19 @@ body,
     color: #ffffff;
     font-weight: 600;
     font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.sys-header > a {
+    text-decoration: none;
+    color: #ffffff;
+}
+.user-info {
+    font-size: 15px;
+}
+.user-info > span:last-child:hover {
+    color: #409eff;
+    cursor: pointer;
 }
 .sys-menu {
     background-color: #545c64;
