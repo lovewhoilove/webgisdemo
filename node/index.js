@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+var bodyParser = require('body-parser');    //首先要引入这个插件
 
 //引入路由文件
 const user = require('./routers/user');
@@ -14,6 +15,11 @@ app.all('*', function (req, res, next) {
     res.header("Content-Type", "application/json;charset=utf-8");
     next();
 });
+
+app.use(bodyParser.urlencoded({  //配置这两行代码
+    extended: true
+}));
+app.use(bodyParser.json());      //配置这两行代码
 
 app.use('/user', user);
 app.use('/', home);

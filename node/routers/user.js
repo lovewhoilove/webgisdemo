@@ -6,8 +6,7 @@ const router = express.Router();
 const pgConfig = 'postgres://postgres:webgis@localhost:5432/webgis';
 
 router.get('/get', function (req, res) {
-    console.log(req.query.name);
-    const name = req.query.name;
+    let name = req.query.name;
     const client = new pg.Client(pgConfig);
     client.connect(function (isErr) {
         if (isErr) {
@@ -35,32 +34,36 @@ router.get('/get', function (req, res) {
     });
 });
 
+//用户注册接口
 router.post('/insert', function (req, res) {
+    let name = req.body.username;
+    let pwd = req.body.password;
+    let phone = req.body.phone;
+    let email = req.body.email;
+
     const client = new pg.Client(pgConfig);
     client.connect(function (isErr) {
         if (isErr) {
-            console.log('连接错误: ' + isErr.message);
+            console.log('connect error:' + isErr.message);
             client.end();
             return;
         }
-        client.query('INSERT INTO "user" VALUES ($1,$2,$3,$4);',
-            ['李四', 'webgis', '13456789201', '120114@qq.com'],
-            function (isErr, results) {
-                if (isErr) {
-                    console.log('插入错误: ' + isErr.message);
-                    res.send({
-                        status: 'fail',
-                        message: '插入错误',
-                    });
-                } else {
-                    console.log('插入成功' + results);
-                    res.send({
-                        status: 'success',
-                        data: [],
-                    });
-                }
-                client.end();
-            });
+        client.query('INSERT INTO "user" (username, password, phone, email) VALUES ($1, $2, $3, $4);', [name, pwd, phone, email], function (isErr, rst) {
+            if (isErr) {
+                console.log('query error:' + isErr.message);
+                res.send({
+                    status: 'fail',
+                    msg: 'insert error'
+                });
+            } else {
+                console.log('insert success, data is: ' + rst);
+                res.send({
+                    status: 'success',
+                    data: []
+                });
+            }
+            client.end();
+        });
     });
 });
 
