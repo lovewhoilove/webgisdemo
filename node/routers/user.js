@@ -1,5 +1,5 @@
 const express = require('express');
-var pg = require('pg');
+const pg = require('pg');
 
 const router = express.Router();
 

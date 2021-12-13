@@ -137,10 +137,10 @@ export default {
                     });
             } else {
                 //注册
-                const username = _self.usernameRegister;
-                const password = _self.passwordRegister;
-                const phone = _self.phoneRegister;
-                const email = _self.emailRegister;
+                let username = _self.usernameRegister;
+                let password = _self.passwordRegister;
+                let phone = _self.phoneRegister;
+                let email = _self.emailRegister;
                 if (!username || !password) {
                     _self.$message({
                         message: '请填写用户名或密码',
